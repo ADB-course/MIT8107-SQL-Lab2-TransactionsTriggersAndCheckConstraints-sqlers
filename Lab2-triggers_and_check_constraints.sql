@@ -35,3 +35,37 @@ DELIMITER ;
 -- Check constraint for correct data manipulation
 ALTER TABLE products
 ADD CONSTRAINT chk_positive_price CHECK (price >= 0);
+
+-- trigger set to fire before an insertion into order details table
+
+DELIMITER //
+
+CREATE TRIGGER trg_check_quantityOrdered
+BEFORE INSERT ON orderdetails
+FOR EACH ROW
+BEGIN
+-- declare a local variable named quantity_in_stock which is an integer 
+-- to store the value that is retrieved from quantityInStock in the products table
+-- NOTE: not the same as the one in the products table
+
+    DECLARE quantity_in_stock INT;
+    
+-- fetch the value to temporarily store into the new quantity ins tock
+    SELECT quantityInStock INTO quantity_in_stock
+    FROM products
+
+-- corresponds to the products in stock
+
+    WHERE productCode = NEW.productCode;
+
+    IF NEW.quantityOrdered > quantity_in_stock THEN
+
+-- SIGNAL SQLSTATE '45000'- unhandled user-defined exception
+
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'QuantityOrdered cannot exceed QuantityInStock';
+    END IF;
+END;
+//
+
+DELIMITER ;
+
