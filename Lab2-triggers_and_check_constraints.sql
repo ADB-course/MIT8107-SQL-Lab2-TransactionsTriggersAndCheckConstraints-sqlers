@@ -67,3 +67,9 @@ END;
 
 DELIMITER ;
 
+-- Check constraint in the offices table to ensure that the values added under phone are the correct format
+-- The constraint enforces that the phone starts with a symbol (+)
+
+ALTER TABLE offices
+ADD CONSTRAINT chk_format CHECK (phone LIKE '+%');
+
