@@ -18,8 +18,6 @@ PRIMARY KEY (`date_changed`),
 UNIQUE KEY `date_changed_UNIQUE` (`date_changed`)
 ) ENGINE= InnoDB;
 =======
---create a products_undo table which will be used with the trigger
---two columns added change_type and date_of_change
 
 DELIMITER //
 CREATE TRIGGER TRG_BEFORE_UPDATE_ON_products BEFORE UPDATE ON products FOR EACH ROW
